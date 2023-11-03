@@ -9,8 +9,8 @@ USER  root
 ARG BBB2_URL="https://gitlab.com/german.tischler/biobambam2/-/archive/2.0.185-release-20221211202123/biobambam2-2.0.185-release-20221211202123.tar.gz"
 ARG BWAMEM2_GIT="https://github.com/bwa-mem2/bwa-mem2.git"
 # accepts tags or commmit ids
-ENV VER_HTSLIB="1.17"
-ENV VER_SAMTOOLS="1.17"
+ENV VER_HTSLIB="1.18"
+ENV VER_SAMTOOLS="1.18"
 ENV VER_LIBDEFLATE="v1.16"
 
 ARG VER_BWA="v0.7.17"
