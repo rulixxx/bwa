@@ -145,74 +145,24 @@ fi
 ## build BWA-mem2 (tar.gz)
 if [ ! -e $SETUP_DIR/bwa2.success ]; then
   rm -rf distro
-  git clone --recursive https://github.com/bwa-mem2/bwa-mem2 distro
-  cd distro
-  #git checkout $BWAMEM2_TAG #checkout current master, 2.2.1 does not complite with gcc10
-  make -j$CPU multi
-  cp bwa-mem2* $INST_PATH/bin/.
-  cd ../
+  get_distro "distro" $BWAMEM2_URL
+  mkdir distro
+  tar --strip-components 1 -C distro -xjf distro.tar.bz2
+  cp distro/* $INST_PATH/bin/
   rm -rf distro.* distro/*
   touch $SETUP_DIR/bwa2.success
 fi
 
-## io_lib
-echo -n "Building io_lib ..."
-if [ -e $SETUP_DIR/io_lib.success ]; then
-  echo " previously built ...";
-else
-  echo
-  cd $SETUP_DIR
-  rm -rf samtools
-  get_distro "distro" "https://github.com/jkbonfield/io_lib/releases/download/io_lib-1-15-0/io_lib-1.15.0.tar.gz"
-  mkdir -p distro
-  tar --strip-components 1 -C distro -xzf distro.tar.gz
-  cd distro
-  ./configure --with-libdeflate=$INST_PATH/lib/ --prefix=$INST_PATH
-  make -j$CPU
-  make install
-  cd $SETUP_DIR
-  rm -f distro.tar.bz2
-  touch $SETUP_DIR/io_lib.success
-fi
-
-## libmaus2
-echo -n "Building libmaus2 ..."
-if [ -e $SETUP_DIR/libmaus2.success ]; then
-  echo " previously built ...";
-else
-  echo
-  cd $SETUP_DIR
-  rm -rf samtools
-  get_distro "distro" "https://gitlab.com/german.tischler/libmaus2/-/archive/2.0.813-release-20221210220409/libmaus2-2.0.813-release-20221210220409.tar.gz"
-  mkdir -p distro
-  tar --strip-components 1 -C distro -xzf distro.tar.gz
-  cd distro
-  ./configure --with-libdeflate --with-io_lib=$INST_PATH --prefix=$INST_PATH
-  make -j$CPU
-  make install
-  cd $SETUP_DIR
-  rm -f distro.tar.bz2
-  touch $SETUP_DIR/io_lib.success
-fi
 
 ## biobambam2
-echo -n "Building biobambam2 ..."
-if [ -e $SETUP_DIR/biobambam2.success ]; then
-  echo " previously built ...";
-else
-  echo
-  cd $SETUP_DIR
-  rm -rf samtools
-  get_distro "distro" "https://gitlab.com/german.tischler/biobambam2/-/archive/2.0.185-release-20221211202123/biobambam2-2.0.185-release-20221211202123.tar.gz"
-  mkdir -p distro
-  tar --strip-components 1 -C distro -xzf distro.tar.gz
-  cd distro
-  ./configure --with-libmaus2=$INST_PATH --prefix=$INST_PATH
-  make -j$CPU
-  make install
-  cd $SETUP_DIR
-  rm -f distro.tar.bz2
-  touch $SETUP_DIR/biobambam2.success
+BB_INST=$INST_PATH/biobambam2
+if [ ! -e $SETUP_DIR/bbb2.sucess ]; then
+  curl -sSL --retry 10 -o distro.tar.xz $BBB2_URL
+  mkdir -p $BB_INST
+  tar --strip-components 3 -C $BB_INST -Jxf distro.tar.xz
+  rm -f $BB_INST/bin/curl # don't let this file in SSL doesn't work
+  rm -rf distro.* distro/*
+  touch $SETUP_DIR/bbb2.success
 fi
 
 cd $HOME

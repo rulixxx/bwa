@@ -6,16 +6,14 @@ USER  root
 # need to keep in sync with setup.sh 
 
 # newer gitlab versions do not work
-ARG BBB2_URL="https://gitlab.com/german.tischler/biobambam2/-/archive/2.0.185-release-20221211202123/biobambam2-2.0.185-release-20221211202123.tar.gz"
-ARG BWAMEM2_GIT="https://github.com/bwa-mem2/bwa-mem2.git"
+ARG BBB2_URL="https://gitlab.com/german.tischler/biobambam2/uploads/178774a8ece96d2201fcd0b5249884c7/biobambam2-2.0.146-release-20191030105216-x86_64-linux-gnu.tar.xz"
+ARG BWAMEM2_URL="https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.2.1/bwa-mem2-2.2.1_x64-linux.tar.bz2"
 # accepts tags or commmit ids
 ENV VER_HTSLIB="1.18"
 ENV VER_SAMTOOLS="1.18"
 ENV VER_LIBDEFLATE="v1.16"
 
 ARG VER_BWA="v0.7.17"
-#using master for bwamem2 which at this time is v2.2.1 
-ARG BWAMEM2_TAG="v2.2.1" 
 
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -40,6 +38,8 @@ RUN apt-get install -yq --no-install-recommends libxml2-dev
 RUN apt-get install -yq --no-install-recommends libgsl-dev
 RUN apt-get install -yq --no-install-recommends libboost-dev
 RUN apt-get install -yq --no-install-recommends git
+RUN apt-get install -yq --no-install-recommends curl
+RUN apt-get install -yq --no-install-recommends xz-utils
 
 
 RUN locale-gen en_US.UTF-8
@@ -83,7 +83,7 @@ RUN locale-gen en_US.UTF-8
 RUN update-locale LANG=en_US.UTF-8
 
 ENV OPT /opt/wtsi-cgp
-ENV PATH $OPT/bin:$PATH
+ENV PATH $OPT/bin:$OPT/biobambam2/bin:$PATH
 ENV LD_LIBRARY_PATH $OPT/lib
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
